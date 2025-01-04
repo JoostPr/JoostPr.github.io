@@ -1,1 +1,100 @@
-"Hello World" 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mijn Startpagina</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; background-color: #f5f5f5; color: #333; }
+        .container { max-width: 800px; margin: 0 auto; background: white; padding: 20px; border-radius: 8px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); }
+        h1, h2 { text-align: center; color: #007BFF; }
+        input, textarea { width: 100%; padding: 10px; margin-bottom: 10px; border: 1px solid #ddd; border-radius: 4px; }
+        button { padding: 10px 20px; background: #007BFF; color: white; border: none; border-radius: 4px; cursor: pointer; }
+        button:hover { background: #0056b3; }
+        .note, .url { margin: 10px 0; padding: 10px; border: 1px solid #ddd; border-radius: 5px; background: #f9f9f9; }
+        .clear-btn { background: #dc3545; }
+        .clear-btn:hover { background: #a71d2a; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Mijn Startpagina</h1>
+        
+        <h2>Voeg Notitie Toe</h2>
+        <textarea id="noteInput" placeholder="Typ je notitie hier..."></textarea>
+        <button onclick="addNote()">Voeg Notitie Toe</button>
+        
+        <h2>Voeg URL Toe</h2>
+        <input type="text" id="urlInput" placeholder="Voer een URL in...">
+        <button onclick="addUrl()">Voeg URL Toe</button>
+
+        <h2>Mijn Notities</h2>
+        <div id="notes"></div>
+
+        <h2>Mijn URL's</h2>
+        <div id="urls"></div>
+
+        <button class="clear-btn" onclick="clearData()">Wis Alles</button>
+    </div>
+
+    <script>
+        // Laad opgeslagen gegevens
+        window.onload = function() {
+            loadNotes();
+            loadUrls();
+        };
+
+        function addNote() {
+            const noteInput = document.getElementById('noteInput');
+            const notes = JSON.parse(localStorage.getItem('notes')) || [];
+            if (noteInput.value) {
+                notes.push(noteInput.value);
+                localStorage.setItem('notes', JSON.stringify(notes));
+                noteInput.value = '';
+                loadNotes();
+            }
+        }
+
+        function addUrl() {
+            const urlInput = document.getElementById('urlInput');
+            const urls = JSON.parse(localStorage.getItem('urls')) || [];
+            if (urlInput.value) {
+                urls.push(urlInput.value);
+                localStorage.setItem('urls', JSON.stringify(urls));
+                urlInput.value = '';
+                loadUrls();
+            }
+        }
+
+        function loadNotes() {
+            const notes = JSON.parse(localStorage.getItem('notes')) || [];
+            const notesContainer = document.getElementById('notes');
+            notesContainer.innerHTML = '';
+            notes.forEach(note => {
+                const noteDiv = document.createElement('div');
+                noteDiv.className = 'note';
+                noteDiv.textContent = note;
+                notesContainer.appendChild(noteDiv);
+            });
+        }
+
+        function loadUrls() {
+            const urls = JSON.parse(localStorage.getItem('urls')) || [];
+            const urlsContainer = document.getElementById('urls');
+            urlsContainer.innerHTML = '';
+            urls.forEach(url => {
+                const urlDiv = document.createElement('div');
+                urlDiv.className = 'url';
+                urlDiv.innerHTML = `<a href="${url}" target="_blank">${url}</a>`;
+                urlsContainer.appendChild(urlDiv);
+            });
+        }
+
+        function clearData() {
+            localStorage.clear();
+            loadNotes();
+            loadUrls();
+        }
+    </script>
+</body>
+</html>
