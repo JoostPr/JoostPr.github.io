@@ -134,27 +134,36 @@
         }
 
         addUrlBtn.addEventListener('click', async () => {
-            const urlText = urlInput.value.trim();
-            const isValidUrl = /^https?:\/\/[\w.-]+(?:\.[\w\.-]+)+(?:\/[^\s]*)?$/.test(urlText);
-            if (isValidUrl) {
-                const exists = await validateUrl(urlText);
-                if (exists) {
-                    const li = document.createElement('li');
-                    li.className = 'list-group-item d-flex justify-content-between align-items-center';
-                    li.innerHTML = `
-                        <a href="${urlText}" target="_blank">${urlText}</a>
-                        <button class="btn btn-sm btn-danger">Verwijderen</button>
-                    `;
-                    li.querySelector('button').addEventListener('click', () => li.remove());
-                    urlsList.appendChild(li);
-                    urlInput.value = '';
-                } else {
-                    alert('De opgegeven URL bestaat niet.');
-                }
-            } else {
-                alert('Voer een geldige URL in (bijv. https://example.com).');
-            }
-        });
+    let urlText = urlInput.value.trim();
+
+    // Controleer of de URL begint met 'http://' of 'https://', anders voeg 'https://' toe
+    if (!/^https?:\/\//.test(urlText)) {
+        urlText = `https://${urlText}`;
+    }
+
+    // Controleer of het een geldige URL is
+    const isValidUrl = /^https?:\/\/[\w.-]+(?:\.[\w\.-]+)+(?:\/[^\s]*)?$/.test(urlText);
+
+    if (isValidUrl) {
+        const exists = await validateUrl(urlText);
+        if (exists) {
+            const li = document.createElement('li');
+            li.className = 'list-group-item d-flex justify-content-between align-items-center';
+            li.innerHTML = `
+                <a href="${urlText}" target="_blank">${urlText}</a>
+                <button class="btn btn-sm btn-danger">Verwijderen</button>
+            `;
+            li.querySelector('button').addEventListener('click', () => li.remove());
+            urlsList.appendChild(li);
+            urlInput.value = '';
+        } else {
+            alert('De opgegeven URL bestaat niet.');
+        }
+    } else {
+        alert('Voer een geldige URL in (bijv. https://example.com).');
+    }
+});
+
     </script>
 </body>
 </html>
